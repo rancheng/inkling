@@ -76,5 +76,3 @@
   (doto (QFrame.)
     (setLayout layout)
     (show)))
-    
-(repl)
