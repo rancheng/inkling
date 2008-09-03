@@ -1,0 +1,1 @@
+javac -cp $CP:/home/jamie/qtjambi-linux32-gpl-4.4.0_01/qtjambi-4.4.0_01.jar:/home/jamie/qtjambi-linux32-gpl-4.4.0_01/qtjambi-linux32-gcc-4.4.0_01.jar $1
