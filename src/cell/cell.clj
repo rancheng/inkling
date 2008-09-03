@@ -1,8 +1,5 @@
-(in-ns 'cell)
-(clojure/refer 'clojure)
-
-(load-file "/home/jamie/inkling/src/utils.clj") (refer 'utils)
-(load-file "/home/jamie/clojure/src/clj/clojure/set/set.clj") (refer 'clojure.set)
+(ns cell
+  (:uses utils clojure.set))
 
 (def- cell-struct (create-struct :valf :val :args :dependents))
 

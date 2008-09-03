@@ -1,43 +1,40 @@
 ; A collection of utilities for using Qt's signal/slot mechanism within clojure
 
-(in-ns 'slot)
-(clojure/refer 'clojure)
-
-(load-file "/home/jamie/inkling/src/utils.clj") (refer 'utils)
-
-(import '(com.trolltech.qt QSignalEmitter
-                           QSignalEmitter$Signal0
-                           QSignalEmitter$Signal1
-                           QSignalEmitter$Signal2
-                           QSignalEmitter$Signal3
-                           QSignalEmitter$Signal4
-                           QSignalEmitter$Signal5
-                           QSignalEmitter$Signal6
-                           QSignalEmitter$Signal7
-                           QSignalEmitter$Signal8
-                           QSignalEmitter$Signal9)
-        '(com.trolltech.qt.clojure QHolder
-                                   QHolder$QSignalHolder0
-                                   QHolder$QSignalHolder1
-                                   QHolder$QSignalHolder2
-                                   QHolder$QSignalHolder3
-                                   QHolder$QSignalHolder4
-                                   QHolder$QSignalHolder5
-                                   QHolder$QSignalHolder6
-                                   QHolder$QSignalHolder7
-                                   QHolder$QSignalHolder8
-                                   QHolder$QSignalHolder9
-                                   QHolder$QMethod0
-                                   QHolder$QMethod1
-                                   QHolder$QMethod2
-                                   QHolder$QMethod3
-                                   QHolder$QMethod4
-                                   QHolder$QMethod5
-                                   QHolder$QMethod6
-                                   QHolder$QMethod7
-                                   QHolder$QMethod8
-                                   QHolder$QMethod9)
-        '(com.trolltech.qt.core Qt$ConnectionType))
+(ns slot
+  (:uses utils)
+  (:imports (com.trolltech.qt QSignalEmitter
+                            QSignalEmitter$Signal0
+                            QSignalEmitter$Signal1
+                            QSignalEmitter$Signal2
+                            QSignalEmitter$Signal3
+                            QSignalEmitter$Signal4
+                            QSignalEmitter$Signal5
+                            QSignalEmitter$Signal6
+                            QSignalEmitter$Signal7
+                            QSignalEmitter$Signal8
+                            QSignalEmitter$Signal9)
+            (com.trolltech.qt.clojure QHolder
+                                    QHolder$QSignalHolder0
+                                    QHolder$QSignalHolder1
+                                    QHolder$QSignalHolder2
+                                    QHolder$QSignalHolder3
+                                    QHolder$QSignalHolder4
+                                    QHolder$QSignalHolder5
+                                    QHolder$QSignalHolder6
+                                    QHolder$QSignalHolder7
+                                    QHolder$QSignalHolder8
+                                    QHolder$QSignalHolder9
+                                    QHolder$QMethod0
+                                    QHolder$QMethod1
+                                    QHolder$QMethod2
+                                    QHolder$QMethod3
+                                    QHolder$QMethod4
+                                    QHolder$QMethod5
+                                    QHolder$QMethod6
+                                    QHolder$QMethod7
+                                    QHolder$QMethod8
+                                    QHolder$QMethod9)
+            (com.trolltech.qt.core Qt$ConnectionType)))
 
 (def- slot-struct (create-struct :obj :arity))
 

@@ -1,5 +1,4 @@
-(in-ns 'utils)
-(clojure/refer 'clojure)
+(ns utils)
 
 (defmacro do_ [& exprs] (list 'let (apply vector (mapcat #(list '_ %) exprs)) '_ ))
 

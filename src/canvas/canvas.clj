@@ -1,5 +1,5 @@
 (ns canvas
-  (:requires utils qt-repl))
+  (:uses utils qt-repl))
 
 (import '(com.trolltech.qt.core Qt$MouseButton Qt$MouseButtons)
         '(com.trolltech.qt.gui QFrame QVBoxLayout QGraphicsView QGraphicsView$ViewportAnchor QGraphicsScene)

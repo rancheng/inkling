@@ -1,11 +1,9 @@
 ; A clojure repl for interactive qt development
 
-(in-ns 'qt-repl)
-(clojure/refer 'clojure)
-
-(import '(com.trolltech.qt.gui QApplication)
-        '(java.io PushbackReader InputStreamReader PrintWriter OutputStreamWriter)
-        '(java.util.concurrent SynchronousQueue))
+(ns qt-repl
+  (:imports (com.trolltech.qt.gui QApplication)
+            (java.io PushbackReader InputStreamReader PrintWriter OutputStreamWriter)
+            (java.util.concurrent SynchronousQueue)))
 
 (def app nil)
 (defn init [] 
