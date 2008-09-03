@@ -2,8 +2,7 @@
   (:uses utils qt-repl))
 
 (import '(com.trolltech.qt.core Qt$MouseButton Qt$MouseButtons)
-        '(com.trolltech.qt.gui QFrame QVBoxLayout QGraphicsView QGraphicsView$ViewportAnchor QGraphicsScene)
-        '(com.trolltech.qt.opengl QGLWidget))
+        '(com.trolltech.qt.gui QFrame QVBoxLayout QGraphicsView QGraphicsView$ViewportAnchor QGraphicsScene QPainter$RenderHint))
  
 (defonce inited (init))
 
@@ -36,45 +35,43 @@
             :release #(println "Right release" %)}})
 (def tools (ref debug-tools))
 
+(def view)
+
 (defn fire-buttons [buttons event-type pos]
   (doseq [button tool] @tools
     (if (. buttons (isSet (buttons-cache button)))
-      ((tool event-type) pos))))
+      ((tool event-type) (. view (mapToScene pos))))))
 
 (defn fire-button [button event-type pos]
   (let [tool (@tools button)]
     (if tool
-      ((tool event-type) pos)
+      ((tool event-type) (. view (mapToScene pos)))
       (prn "No tool for button" button))))
 
 (def scene 
   (doto (QGraphicsScene.)))
-  
-(def qlwidget 
-  (doto (QGLWidget.)))
 
-(def view)
 (def view
   (doto
     (proxy [QGraphicsView] []
       (mousePressEvent [event] 
-        (fire-button (. event (button)) :press (. event (posF))))
+        (fire-button (. event (button)) :press (. event (pos))))
       (mouseReleaseEvent [event] 
-        (fire-button (. event (button)) :release (. event (posF))))
+        (fire-button (. event (button)) :release (. event (pos))))
       (mouseDoubleClickEvent [event] 
-        (fire-button (. event (button)) :2press (. event (posF))))
+        (fire-button (. event (button)) :2press (. event (pos))))
       (mouseMoveEvent [event] 
-        (fire-buttons (. event (buttons)) :move (. event (posF))))
+        (fire-buttons (. event (buttons)) :move (. event (pos))))
       )
-      
-    (setViewport qlwidget)
+
+    (setRenderHint (. QPainter$RenderHint Antialiasing) true)
     (setScene scene)
     (setResizeAnchor (. QGraphicsView$ViewportAnchor NoAnchor))))
 
 (def layout 
   (doto (QVBoxLayout.)
     (addWidget view)))
-    
+
 (def frame 
   (doto (QFrame.)
     (setLayout layout)
