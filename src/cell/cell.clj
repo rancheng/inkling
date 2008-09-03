@@ -15,7 +15,7 @@
           new-arg-cell (assoc c :dependents (disj dependents dep-cell))]
       (ref-set arg-cell new-arg-cell)))) 
 
-(defmacro cell [args valf]
+(defmacro cell [args & valf]
   (let [cell-inner 
           (fn [args valf]
             (dosync
@@ -24,10 +24,10 @@
                 (doseq arg args
                   (add-dep new-cell arg))
                 new-cell)))]
-    `(~cell-inner ~args (fn [] ~valf))))
+    `(~cell-inner ~args (fn [] (do ~@valf)))))
 
-(defmacro defcell [name args valf]
-  `(def ~name (cell ~args ~valf)))
+(defmacro defcell [name args & valf]
+  `(def ~name (cell ~args ~@valf)))
 
 (defn update [cell]
   (dosync
@@ -37,16 +37,16 @@
       (ref-set cell new-cell)
       (if (not= val new-val) (doseq dep dependents (update dep))))))
 
+(defn modified [cell]
+  (let [{dependents :dependents} @cell]
+  (dosync (doseq dep dependents (update dep)))))
+
 (defn decell [cell] (:val @cell)) 
 
-(defmacro cell-set [cell new-args new-valf]
+(defmacro cell-set [cell & new-valf]
   (let [cell-set-inner 
-          (fn [cell new-args new-valf]
+          (fn [cell new-valf]
             (dosync
-              (let [{:keys [valf val-agent args dependents]} @cell
-                    new-cell (struct cell-struct new-valf val args dependents)]
-                (doseq arg args (remove-dep cell arg))
-                (doseq arg new-args (add-dep cell arg))
-                (ref-set cell new-cell)
-                (update cell))))]
-    `(~cell-set-inner ~cell ~new-args (fn [] ~new-valf)))) 
+                (ref-set cell (assoc @cell :valf new-valf))
+                (update cell)))]
+    `(~cell-set-inner ~cell (fn [] ~@new-valf)))) 
