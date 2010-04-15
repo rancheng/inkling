@@ -1,6 +1,7 @@
 (ns utils)
 
 (defmacro do_ [& exprs] (list 'let (apply vector (mapcat #(list '_ %) exprs)) '_ ))
+(defmacro doto-this [obj & exprs] `(let [~'this ~obj] (doto ~obj ~@exprs))) 
 
 (defmacro def-
   "private version of def"
@@ -9,5 +10,4 @@
 
 (defn dnew [name & args] 
   (clojure.lang.Reflector/invokeConstructor (resolve name) (to-array args))) 
-  
-(println "Utils")
+

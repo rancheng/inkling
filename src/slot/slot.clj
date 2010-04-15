@@ -14,6 +14,7 @@
                             QSignalEmitter$Signal8
                             QSignalEmitter$Signal9)
             (com.trolltech.qt.clojure QHolder
+                                    QHolder$Arity
                                     QHolder$QSignalHolder0
                                     QHolder$QSignalHolder1
                                     QHolder$QSignalHolder2
@@ -34,38 +35,38 @@
                                     QHolder$QMethod7
                                     QHolder$QMethod8
                                     QHolder$QMethod9)
-            (com.trolltech.qt.core Qt$ConnectionType)))
+            (com.trolltech.qt.core Qt$ConnectionType)
+            (clojure.lang IFn)))
 
-(def- slot-struct (create-struct :obj :arity))
+(def- slots 
+  (vec 
+    (for [arity (range 10)] 
+      (let [args (for [i (range arity)] (gensym))]
+        (eval `(fn [f#] 
+                  (proxy
+                      [~(symbol (str "QHolder$QMethod" arity)) ~'QHolder$Arity ~'IFn]
+                      []
+                      (~'arity [] ~arity)
+                      (~'invoke [~@args] (f# ~@args))
+                      (~'applyTo ~(if (== 0 (count args)) [] `[[~@args]]) (f# ~@args))
+                      (~'method [~@args] (f# ~@args)))))))))
 
-(def- qmethods 
-  (vec
-    (for [i (range 10)]
-      (eval (symbol (str "QHolder$QMethod" i))))))
 
-(defn make-slot [f arity]
-  "Wraps f in a qt slot with a fixed arity"
+(defn slot [arity f]
+  "Wraps f in a qt slot with a fixed arity. Slots are instances of IFn, calling the wrapped clojure fn."
   (if (> arity 9)
     (throw (Exception. "Clojure slots cannot have more than 9 args"))
-    (struct slot-struct
-      ; a proxy of slot-type with the 'slot' method set to f
-      (proxy 
-        [(nth qmethods arity)] [] 
-        (method
-          ([] (f))
-          ([&rest] (f &rest))))
-      arity)))
+    ((nth slots arity) f) ))
 
 (def- signals 
   (vec 
-    (for [i (range 10)] 
+    (for [arity (range 10)] 
       (eval `(fn [] 
-                (let [holder# ( ~(symbol (str "QHolder$QSignalHolder" i ".")) )]
-                  (set! (. holder# signal) (new ~(symbol (str "QSignalEmitter$Signal" i)) holder#))))
-                  ))))
+                (let [holder# (new ~(symbol (str "QHolder$QSignalHolder" arity)))] 
+                  (set! (. holder# ~'signal) (new ~(symbol (str "QSignalEmitter$Signal" arity)) holder#))))))))
 
-(defn make-signal [arity]
-  "Makes a signal of with a fixed arity. The signals arguments are all Objects so 
+(defn signal [arity]
+  "Makes a signal of fixed arity. The signals arguments are all Objects so 
    this signal cannot be directly connected to a c++ slot."
   (if (> arity 9)
     (throw (Exception. "Clojure signals cannot have more than 9 args"))
@@ -77,17 +78,25 @@
 (defn connect [signal slot]
   "Connect a qt signal to a wrapped clojure function (made with make-slot).
    The signal and slot must have the same arity."
-  (.connect signal (:obj slot)   ; note this is the connect method, not the connect function
+  (.connect signal slot   ; note this is the connect method, not the connect function
     (str 
       "method("  
-      (apply str (interpose ", " (replicate (:arity slot) "Object")))
+      (apply str (interpose ", " (replicate (. slot (arity)) "Object")))
       ")")
     (. Qt$ConnectionType QueuedConnection)))
 
-(defn disconnect [signal slot]
-  "Disconnect a qt signal from a wrapped clojure function"
-  (.disconnect signal (:obj slot)   ; note this is the disconnect method, not the disconnect function
-    (str 
-      "method("  
-      (apply str (interpose ", " (replicate (:arity slot) "Object")))
-      ")")))
+(defn disconnect 
+  ([signal] 
+  "Disconnect all slots from signal" 
+    (.disconnect signal))
+  ([signal slot]
+  "Disconnect a signal from a slot"
+    (.disconnect signal slot   ; note this is the disconnect method, not the disconnect function
+      (str 
+        "method("  
+        (apply str (interpose ", " (replicate (.arity slot) "Object")))
+        ")"))))
+
+(defmacro emit [signal & args]
+    "Trigger signal with args"
+  `(. ~signal (~'emit ~@args))) 

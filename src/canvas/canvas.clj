@@ -1,8 +1,8 @@
 (ns canvas
   (:uses utils qt-repl))
 
-(import '(com.trolltech.qt.core Qt$MouseButton Qt$MouseButtons)
-        '(com.trolltech.qt.gui QFrame QVBoxLayout QGraphicsView QGraphicsView$ViewportAnchor QGraphicsScene QPainter$RenderHint))
+(import '(com.trolltech.qt.core Qt$MouseButton Qt$MouseButtons Qt$Alignment Qt$AlignmentFlag Qt$CursorShape QRectF)
+        '(com.trolltech.qt.gui QFrame QVBoxLayout QGraphicsView QGraphicsView$ViewportAnchor QGraphicsScene QPainter$RenderHint QCursor))
  
 (defonce inited (init))
 
@@ -35,6 +35,10 @@
             :release #(println "Right release" %)}})
 (def tools (ref debug-tools))
 
+(defn set-tool [button tool]
+  (dosync (alter tools #(assoc % button tool)))
+  nil)
+
 (def view)
 
 (defn fire-buttons [buttons event-type pos]
@@ -50,6 +54,12 @@
 
 (def scene 
   (doto (QGraphicsScene.)))
+  
+(def align
+    (let [arr (make-array Qt$AlignmentFlag 2)]
+    (aset arr 0 (. Qt$AlignmentFlag AlignTop))
+    (aset arr 1 (. Qt$AlignmentFlag AlignLeft))
+    (Qt$Alignment. arr)))
 
 (def view
   (doto
@@ -66,7 +76,14 @@
 
     (setRenderHint (. QPainter$RenderHint Antialiasing) true)
     (setScene scene)
+    (setAlignment align)
     (setResizeAnchor (. QGraphicsView$ViewportAnchor NoAnchor))))
+
+(defn cursor-off []
+  (. view (setCursor (QCursor. (. Qt$CursorShape BlankCursor)))))
+
+(defn cursor-on []
+  (. view (setCursor (QCursor. (. Qt$CursorShape ArrowCursor)))))
 
 (def layout 
   (doto (QVBoxLayout.)

@@ -7,15 +7,21 @@ import com.trolltech.qt.core.QObject;
 
 public class QHolder extends QObject {
 
-  public static class QSignalHolder0 extends QObject {
+  public static interface Arity {
+    public Integer arity();
+    }
+
+  public static class QSignalHolder0 extends QSignalEmitter {
     public QSignalHolder0() {
       super();
       }
   
     public Signal0 signal;
+    
+    
     }
 
-  public static class QSignalHolder1 extends QObject {
+  public static class QSignalHolder1 extends QSignalEmitter {
     public QSignalHolder1() {
       super();
       }
@@ -23,7 +29,7 @@ public class QHolder extends QObject {
     public Signal1<Object> signal;
     }
     
-  public static class QSignalHolder2 extends QObject {
+  public static class QSignalHolder2 extends QSignalEmitter {
     public QSignalHolder2() {
       super();
       }
@@ -31,7 +37,7 @@ public class QHolder extends QObject {
     public Signal2<Object,Object> signal;
     }
     
-  public static class QSignalHolder3 extends QObject {
+  public static class QSignalHolder3 extends QSignalEmitter {
     public QSignalHolder3() {
       super();
       }
@@ -39,7 +45,7 @@ public class QHolder extends QObject {
     public Signal3<Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder4 extends QObject {
+  public static class QSignalHolder4 extends QSignalEmitter {
     public QSignalHolder4() {
       super();
       }
@@ -47,7 +53,7 @@ public class QHolder extends QObject {
     public Signal4<Object,Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder5 extends QObject {
+  public static class QSignalHolder5 extends QSignalEmitter {
     public QSignalHolder5() {
       super();
       }
@@ -55,7 +61,7 @@ public class QHolder extends QObject {
     public Signal5<Object,Object,Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder6 extends QObject {
+  public static class QSignalHolder6 extends QSignalEmitter {
     public QSignalHolder6() {
       super();
       }
@@ -63,7 +69,7 @@ public class QHolder extends QObject {
     public Signal6<Object,Object,Object,Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder7 extends QObject {
+  public static class QSignalHolder7 extends QSignalEmitter {
     public QSignalHolder7() {
       super();
       }
@@ -71,7 +77,7 @@ public class QHolder extends QObject {
     public Signal7<Object,Object,Object,Object,Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder8 extends QObject {
+  public static class QSignalHolder8 extends QSignalEmitter {
     public QSignalHolder8() {
       super();
       }
@@ -79,7 +85,7 @@ public class QHolder extends QObject {
     public Signal8<Object,Object,Object,Object,Object,Object,Object,Object> signal;
     }
     
-  public static class QSignalHolder9 extends QObject {
+  public static class QSignalHolder9 extends QSignalEmitter {
     public QSignalHolder9() {
       super();
       }
@@ -87,7 +93,7 @@ public class QHolder extends QObject {
     public Signal9<Object,Object,Object,Object,Object,Object,Object,Object,Object> signal;
     }
     
-  public static class QMethod0 extends QObject {
+  public static class QMethod0 extends QSignalEmitter {
     public QMethod0() {
       super();
       }
@@ -97,7 +103,7 @@ public class QHolder extends QObject {
       }
     }
     
-  public static class QMethod1 extends QObject {
+  public static class QMethod1 extends QSignalEmitter {
     public QMethod1() {
       super();
       }
@@ -107,7 +113,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod2 extends QObject {
+  public static class QMethod2 extends QSignalEmitter {
     public QMethod2() {
       super();
       }
@@ -117,7 +123,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod3 extends QObject {
+  public static class QMethod3 extends QSignalEmitter {
     public QMethod3() {
       super();
       }
@@ -127,7 +133,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod4 extends QObject {
+  public static class QMethod4 extends QSignalEmitter {
     public QMethod4() {
       super();
       }
@@ -137,7 +143,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod5 extends QObject {
+  public static class QMethod5 extends QSignalEmitter {
     public QMethod5() {
       super();
       }
@@ -147,7 +153,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod6 extends QObject {
+  public static class QMethod6 extends QSignalEmitter {
     public QMethod6() {
       super();
       }
@@ -157,7 +163,7 @@ public class QHolder extends QObject {
       }
     }
 
-  public static class QMethod7 extends QObject {
+  public static class QMethod7 extends QSignalEmitter {
     public QMethod7() {
       super();
       }
@@ -167,7 +173,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod8 extends QObject {
+  public static class QMethod8 extends QSignalEmitter {
     public QMethod8() {
       super();
       }
@@ -177,7 +183,7 @@ public class QHolder extends QObject {
       }
     }
       
-  public static class QMethod9 extends QObject {
+  public static class QMethod9 extends QSignalEmitter {
     public QMethod9() {
       super();
       }

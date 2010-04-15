@@ -1,33 +1,35 @@
 (ns pen
-  (:uses utils canvas cell)
-  (:imports (com.trolltech.qt.gui QGraphicsPathItem QPainterPath)))
+  (:uses utils canvas cell slot)
+  (:imports (com.trolltech.qt.gui QGraphicsPathItem QPainterPath QGraphicsItem QGraphicsItem$GraphicsItemFlag QGraphicsItem$CacheMode)
+            (com.trolltech.qt.core QSize)))
 
-(defcell path [] nil)
-(defcell path-item [path] nil)
-
-(defn pen-down [pos]
+(defn pen-down [path pathitem pos]
   (dosync 
     (let [p (QPainterPath. pos)
           i (QGraphicsPathItem.)]
       (. scene (addItem i))
-      (cell-set path p)
-      (cell-set path-item
-        (doto i (setPath (decell path)))))))
+      (doto i 
+        (setPath p)
+        (setFlag (. QGraphicsItem$GraphicsItemFlag ItemIsSelectable) true)
+;       (setCacheMode (. QGraphicsItem$CacheMode DeviceCoordinateCache) (QSize. 0 0)) ; QSize isnt used - supposed to be an optional arg
+        ) 
+      (ref-set path p)
+      (ref-set pathitem i))))
 
-(defn pen-move [pos]
+(defn pen-move [path pathitem pos]
   (dosync
-    (. (decell path) (lineTo pos))
-    (modified path)))
+    (. @path (lineTo pos))
+    (. @pathitem (setPath @path))))
 
-(defn pen-up [pos]
-  (dosync
-    (cell-set path-item nil)
-    (cell-set path nil)))
+(defn pen-up [path pathitem pos])
 
-(def pen-tool
-  {:press pen-down
-   :2press pen-down
-   :release pen-up
-   :move pen-move})
-   
-(dosync (alter tools #(assoc % lbutton pen-tool)))
+(defn pen-tool []
+  (let [path (ref nil)
+        pathitem (ref nil)]
+    {:press #(pen-down path pathitem %)
+    :2press #(pen-down path pathitem %)
+    :release #(pen-up path pathitem %)
+    :move #(pen-move path pathitem %)}))
+
+(defn set-pen []
+  (set-tool lbutton (pen-tool)))
