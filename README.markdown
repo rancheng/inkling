@@ -4,7 +4,7 @@ Inkling represents a series of attempts to create an effective note-taking app f
 * Handwriting should not be converted to print. Handwriting recognition should instead be used to populate search indices.
 * We are not going to run out of paper. The writing area should not be limited in size.
 
-Inkling's (gnote) was a short prototype using haskell and cairo/gtk. 
+Inkling's first implementation (gnote) was a short prototype using haskell and cairo/gtk. 
 
 The second implementation (jottinks) used python and qt. This version suffered from an overabundance of inheritance and mutable state. Unfortunately this is difficult to avoid when using pyqt.
 
